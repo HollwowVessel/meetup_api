@@ -3,12 +3,8 @@ import { meetupController } from '../controllers/meetup';
 
 export const router = Router();
 
-router.get('/meetup', meetupController.getMeetups);
-
-router.get('/meetup/:id', meetupController.getOneMeetup);
-
-router.post('/meetup', meetupController.createMeetup);
-
-router.delete('/meetup/:id', meetupController.deleteMeetup);
-
-router.patch('/meetup/:id', meetupController.updateMeetup);
+router.get('/', meetupController.getMeetups);
+router.post('/', meetupController.createMeetup);
+router.get('/:id', meetupController.getOneMeetup);
+router.delete('/:id', meetupController.deleteMeetup);
+router.patch('/:id', meetupController.updateMeetup);

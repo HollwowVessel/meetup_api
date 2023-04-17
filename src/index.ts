@@ -6,7 +6,7 @@ const app = express();
 const port = Number(PORT) || 4000;
 
 app.use(express.json());
-app.use(meetupRouter);
+app.use('/meetup', meetupRouter);
 
 app.get('/', (req, res) => {
   res.status(200).json({

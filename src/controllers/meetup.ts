@@ -30,7 +30,7 @@ class MeetupController {
 
       const meetup = await db.one(queries.delete, [id]);
 
-      res.status(200).json({ ...meetup, state: 'deleted' });
+      res.status(200).json({ ...meetup, success: true });
     } catch (err) {
       next(err);
     }

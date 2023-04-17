@@ -11,10 +11,11 @@ const pgp = pgPromise();
 const connectionString = `postgresql://${USER!}:${PASSWORD!}@localhost:${PORT!}/${NAME!}`;
 
 export const db = pgp(connectionString);
+
 export const queries = {
-  getAll: createQuery('./db/queries/getAll.sql'),
-  getOne: createQuery('./db/queries/getById.sql'),
-  delete: createQuery('./db/queries/delete.sql'),
-  update: createQuery('./db/queries/update.sql'),
-  create: createQuery('./db/queries/create.sql'),
+  getAll: createQuery(__dirname, 'queries/getAll.sql'),
+  getOne: createQuery(__dirname, 'queries/getById.sql'),
+  delete: createQuery(__dirname, 'queries/delete.sql'),
+  update: createQuery(__dirname, 'queries/update.sql'),
+  create: createQuery(__dirname, 'queries/create.sql'),
 };
