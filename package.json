@@ -4,16 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "set NODE_ENV=production&&node build/index.js",
+    "start": "set NODE_ENV=production &&node build/index.js",
     "start:dev": "set NODE_ENV=development && ts-node-dev --respawn --transpile-only src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint . --ext .ts"
+    "lint": "npx tsc --noEmit && npx eslint --ext .ts ./",
+    "lint:fix": "npx tsc --noEmit && npx eslint --ext .ts --fix ./"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "joi": "^17.9.1",
+    "pg-promise": "^11.4.3"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
