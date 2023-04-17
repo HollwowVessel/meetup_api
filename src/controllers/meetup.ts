@@ -1,68 +1,70 @@
-import { type NextFunction, type Request, type Response } from 'express';
-import { db, queries } from '../db';
+import { type Request, type Response } from 'express';
+import { meetupSchema } from '../schemes/meetup';
+import { meetupService } from '../services/meetup';
+import { sendMessage } from '../utils/sendMessage';
 
 class MeetupController {
-  async getMeetups(req: Request, res: Response, next: NextFunction) {
-    try {
-      const meetups = await db.many(queries.getAll);
+  async getMeetups(req: Request, res: Response) {
+    const data = await meetupService.getAll();
 
-      res.status(200).json(meetups);
-    } catch (err) {
-      next(err);
-    }
+    sendMessage(data, res);
   }
 
-  async getOneMeetup(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { id } = req.params;
+  async getOneMeetup(req: Request, res: Response) {
+    const {
+      params: { id },
+    } = req;
 
-      const meetup = await db.one(queries.getOne, [id]);
+    const data = await meetupService.getOne(id);
 
-      res.status(200).json(meetup);
-    } catch (err) {
-      next(err);
-    }
+    sendMessage(data, res);
   }
 
-  async deleteMeetup(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { id } = req.params;
+  async deleteMeetup(req: Request, res: Response) {
+    const {
+      params: { id },
+    } = req;
 
-      const meetup = await db.one(queries.delete, [id]);
+    const data = await meetupService.delete(id);
 
-      res.status(200).json({ ...meetup, success: true });
-    } catch (err) {
-      next(err);
-    }
+    sendMessage(data, res);
   }
 
-  async updateMeetup(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { name, description, tags, timestamps } = req.body;
-      const { id } = req.params;
+  async updateMeetup(req: Request, res: Response) {
+    const { error } = await meetupSchema.validateAsync(req.body);
 
-      const params = [name, description, tags, timestamps, id];
-
-      const meetup = await db.one(queries.update, params);
-
-      res.status(200).json(meetup);
-    } catch (err) {
-      next(err);
+    if (error) {
+      res.status(400).json({ error: error.details });
     }
+
+    const {
+      body: { name, description, tags, timestamps },
+    } = req;
+    const {
+      params: { id },
+    } = req;
+
+    const params = [name, description, tags, timestamps, id];
+
+    const data = await meetupService.update(params);
+
+    sendMessage(data, res);
   }
 
-  async createMeetup(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { name, description, tags, timestamps } = req.body;
+  async createMeetup(req: Request, res: Response) {
+    const { error } = await meetupSchema.validateAsync(req.body);
 
-      const params = [name, description, tags, timestamps];
-
-      const newMeetup = await db.one(queries.create, params);
-
-      res.status(201).json(newMeetup);
-    } catch (err) {
-      next(err);
+    if (error) {
+      res.status(400).json({ error: error.details[0].message });
     }
+
+    const {
+      body: { name, description, tags, timestamps },
+    } = req;
+    const params = [name, description, tags, timestamps];
+    const data = await meetupService.create(params);
+
+    sendMessage(data, res);
   }
 }
 
