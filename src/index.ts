@@ -1,7 +1,16 @@
 import express from 'express';
 import { PORT } from './constants';
 import { meetupRouter } from './routes';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+import { join } from 'path';
 const app = express();
+console.log(__dirname);
+
+const swaggerDocument = YAML.load(join(__dirname, 'swagger.yaml'));
+
+app.use('/api-docs', swaggerUi.serve);
+app.get('/api-docs', swaggerUi.setup(swaggerDocument));
 
 const port = Number(PORT) || 4000;
 

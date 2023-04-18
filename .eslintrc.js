@@ -21,6 +21,7 @@ module.exports = {
         '@typescript-eslint/no-redundant-type-constituents': 0,
         'array-callback-return': 0,
         '@typescript-eslint/consistent-type-definitions': 0,
+        '@typescript-eslint/no-unsafe-call': 0,
       },
     },
   ],
