@@ -19,6 +19,8 @@ module.exports = {
         '@typescript-eslint/no-unsafe-argument': 'off',
         '@typescript-eslint/no-unsafe-return': 'off',
         '@typescript-eslint/no-redundant-type-constituents': 0,
+        'array-callback-return': 0,
+        '@typescript-eslint/consistent-type-definitions': 0,
       },
     },
   ],

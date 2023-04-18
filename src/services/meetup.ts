@@ -1,4 +1,5 @@
-import { INTERNAL_SERVER_ERROR, NOT_FOUND } from '../constants/http';
+import { type Request } from 'express';
+import { INTERNAL_SERVER_ERROR, NOT_FOUND } from '../constants/httpMessages';
 import { db, queries } from '../db';
 import { type Result } from '../types';
 
@@ -50,6 +51,16 @@ class MeetupService {
       return { result, status: 201 };
     } catch (err) {
       return { status: 500, error: true, result: INTERNAL_SERVER_ERROR };
+    }
+  }
+
+  async getAllWithCustomQuery(query: string): Promise<Result> {
+    try {
+      const result = await db.many(query);
+
+      return { result, status: 200 };
+    } catch (err) {
+      return { status: 404, err: true, result: NOT_FOUND };
     }
   }
 }
