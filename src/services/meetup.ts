@@ -1,12 +1,12 @@
 import { type Request } from 'express';
 import { INTERNAL_SERVER_ERROR, NOT_FOUND } from '../constants/httpMessages';
-import { db, queries } from '../db';
+import { db, meetupQueries } from '../db';
 import { type Result } from '../types';
 
 class MeetupService {
   async getOne(id: string): Promise<Result> {
     try {
-      const result = await db.one(queries.getOne, [id]);
+      const result = await db.one(meetupQueries.getOne, [id]);
 
       return { result, status: 200 };
     } catch (err) {
@@ -16,7 +16,7 @@ class MeetupService {
 
   async getAll(): Promise<Result> {
     try {
-      const result = await db.many(queries.getAll);
+      const result = await db.many(meetupQueries.getAll);
 
       return { result, status: 200 };
     } catch (err) {
@@ -26,7 +26,7 @@ class MeetupService {
 
   async delete(id: string): Promise<Result> {
     try {
-      const result = await db.one(queries.delete, [id]);
+      const result = await db.one(meetupQueries.delete, [id]);
 
       return { result, status: 200 };
     } catch (err) {
@@ -36,7 +36,7 @@ class MeetupService {
 
   async update(params: string[]): Promise<Result> {
     try {
-      const result = await db.one(queries.update, params);
+      const result = await db.one(meetupQueries.update, params);
 
       return { result, status: 200 };
     } catch (err) {
@@ -46,7 +46,7 @@ class MeetupService {
 
   async create(params: string[]) {
     try {
-      const result = await db.one(queries.create, params);
+      const result = await db.one(meetupQueries.create, params);
 
       return { result, status: 201 };
     } catch (err) {

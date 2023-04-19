@@ -27,7 +27,5 @@ export const createSearchQuery = (queries: IQuery) => {
     return `SELECT * FROM meetups WHERE ${query}`;
   }
 
-  console.log(sort);
-
   return `SELECT * FROM meetups ${sort ? `ORDER BY ${sort}` : 'ORDER BY id'}`;
 };

@@ -1,7 +1,8 @@
 import { type IQuery } from '../schemes/meetup/interfaces';
+import { type IDefinedValues } from '../schemes/user/interfaces';
 
 export const generateQueryValues = (query: IQuery) => {
-  const res = [];
+  const res: IDefinedValues[] = [];
 
   for (const item in query) {
     if (item in query) {

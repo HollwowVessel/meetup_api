@@ -8,3 +8,5 @@ export const {
   POSTGRES_PORT,
   POSTGRES_NAME,
 } = process.env;
+
+export const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;

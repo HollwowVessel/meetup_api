@@ -17,7 +17,6 @@ class MeetupController {
         data = await meetupService.getAll();
       } else {
         const query = createSearchQuery(req.query as unknown as IQuery);
-
         data = await meetupService.getAllWithCustomQuery(query);
       }
 
