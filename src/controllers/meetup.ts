@@ -12,6 +12,7 @@ class MeetupController {
       await queryObjectSchema.validateAsync(req.query);
 
       let data: Result;
+
       if (Object.keys(req.query).length === 0) {
         data = await meetupService.getAll();
       } else {

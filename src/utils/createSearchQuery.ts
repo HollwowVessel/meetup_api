@@ -2,7 +2,7 @@ import { type IQuery } from '../schemes/meetup/interfaces';
 import { generateQueryValues } from './generateQueryValues';
 
 export const createSearchQuery = (queries: IQuery) => {
-  const { to, from } = queries;
+  const { to, from, sort } = queries;
   let query = generateQueryValues(queries);
 
   if (query && (from || to)) {
@@ -27,5 +27,7 @@ export const createSearchQuery = (queries: IQuery) => {
     return `SELECT * FROM meetups WHERE ${query}`;
   }
 
-  return 'SELECT * FROM meetups';
+  console.log(sort);
+
+  return `SELECT * FROM meetups ${sort ? `ORDER BY ${sort}` : 'ORDER BY id'}`;
 };

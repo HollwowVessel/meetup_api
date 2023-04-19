@@ -11,4 +11,5 @@ export interface IQuery {
   tags: string[];
   to: string;
   from: string;
+  sort: 'id' | 'name' | 'timestamp';
 }

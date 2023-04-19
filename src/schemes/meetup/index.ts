@@ -16,4 +16,7 @@ export const queryObjectSchema = Joi.object({
   to: Joi.string().isoDate(),
   page: Joi.number().optional(),
   offset: Joi.number().optional(),
+  sort: Joi.string()
+    .pattern(/id|name|timestamps/, 'id, name, timestamps')
+    .optional(),
 });

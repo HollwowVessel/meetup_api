@@ -23,7 +23,7 @@ export const generateQueryValues = (query: IQuery) => {
 
       if (
         typeof value === 'string' &&
-        !['from', 'to', 'page', 'offset'].includes(key)
+        !['from', 'to', 'page', 'offset', 'sort'].includes(key)
       ) {
         return `${key} = '${value}'`;
       }
