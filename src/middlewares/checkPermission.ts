@@ -13,13 +13,23 @@ export const checkPermission = async (
   try {
     const { id: reqId } = req.params;
 
+    const { accessToken } = req.cookies;
+
+    const { id, role } = verify(accessToken, ACCESS_TOKEN_SECRET!) as IJWTInfo;
+
+    if (role !== 'creator') {
+      res.status(403).json({ err: FORBIDDEN });
+      return;
+    }
+
+    if (!reqId && role === 'creator') {
+      next();
+      return;
+    }
+
     const { creator_id: creatorId } = await db.oneOrNone(meetupQueries.getOne, [
       reqId,
     ]);
-
-    const { accessToken } = req.cookies;
-
-    const { id } = verify(accessToken, ACCESS_TOKEN_SECRET!) as IJWTInfo;
 
     if (creatorId !== id) {
       res.status(403).json({ err: FORBIDDEN });

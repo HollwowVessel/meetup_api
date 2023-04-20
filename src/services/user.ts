@@ -49,9 +49,9 @@ class UserService {
         };
       }
 
-      const { id, username } = user;
+      const { id, username, role } = user;
 
-      const userData = { id, email, username };
+      const userData = { id, email, username, role };
 
       const accessToken = sign(userData, ACCESS_TOKEN_SECRET!, {
         expiresIn: ACCESS_TOKEN_LIFETIME,
@@ -67,6 +67,7 @@ class UserService {
         accessToken,
         refreshToken,
         username,
+        role,
         id,
         email,
       };

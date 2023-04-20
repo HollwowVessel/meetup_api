@@ -55,12 +55,12 @@ export class UserController {
     try {
       const { refreshToken } = req.cookies;
 
-      const { id, email, username } = verify(
+      const { id, email, username, role } = verify(
         refreshToken,
         REFRESH_TOKEN_SECRET!
       ) as IJWTInfo;
 
-      const userData = { id, username, email };
+      const userData = { id, username, email, role };
 
       const accessToken = sign(userData, ACCESS_TOKEN_SECRET!, {
         expiresIn: ACCESS_TOKEN_LIFETIME,
