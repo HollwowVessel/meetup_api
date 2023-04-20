@@ -1,7 +1,15 @@
 import { type IMeetup } from '../schemes/meetup/interfaces';
 
+type UserInfo = {
+  accessToken: string;
+  refreshToken: string;
+  username: string;
+  id: string;
+  email: string;
+};
+
 export type Result = {
-  result: IMeetup | IMeetup[] | string;
+  result: IMeetup | IMeetup[] | UserInfo | string;
   status: number;
   err?: boolean;
 };
