@@ -1,11 +1,16 @@
 import { type Request, type Response } from 'express';
-import { userSchema } from '../schemes/user';
+import { loginSchema, userSchema } from '../schemes/user';
 import { sign, verify } from 'jsonwebtoken';
 import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from '../constants';
-import { ACCESS_TOKEN_LIFETIME } from '../constants/jwtInfo';
+import {
+  ACCESS_TOKEN_LIFETIME,
+  REFRESH_TOKEN_LIFETIME,
+} from '../constants/jwtInfo';
 import { type IJWTInfo } from '../schemes/user/interfaces';
 import { userService } from '../services/user';
 import { sendMessage } from '../utils/sendMessage';
+import { getMaxAge } from '../utils/getMaxAge';
+import { type UserInfo } from '../types';
 
 export class UserController {
   async registration(req: Request, res: Response) {
@@ -24,11 +29,19 @@ export class UserController {
 
   async login(req: Request, res: Response) {
     try {
-      const { email, password } = await userSchema.validateAsync(req.body);
+      const { email, password } = await loginSchema.validateAsync(req.body);
 
       const data = await userService.login(email, password);
 
-      sendMessage(data, res);
+      res
+        .status(data.status)
+        .cookie('accessToken', (data.result as UserInfo).accessToken, {
+          maxAge: getMaxAge(ACCESS_TOKEN_LIFETIME),
+        })
+        .cookie('refreshToken', (data.result as UserInfo).refreshToken, {
+          maxAge: getMaxAge(ACCESS_TOKEN_LIFETIME),
+        })
+        .json(data.result);
     } catch (err) {
       res.json({ err: (err as Error).message });
     }
@@ -36,7 +49,9 @@ export class UserController {
 
   async refreshToken(req: Request, res: Response) {
     try {
-      const { refreshToken } = req.body;
+      const { refreshToken } = req.cookies;
+
+      console.log(refreshToken);
 
       const { id, email, username } = verify(
         refreshToken,
@@ -49,7 +64,15 @@ export class UserController {
         expiresIn: ACCESS_TOKEN_LIFETIME,
       });
 
-      res.status(200).send({ refreshToken, accessToken });
+      res
+        .status(200)
+        .cookie('accessToken', accessToken, {
+          maxAge: getMaxAge(ACCESS_TOKEN_LIFETIME),
+        })
+        .cookie('refreshToken', refreshToken, {
+          maxAge: getMaxAge(REFRESH_TOKEN_LIFETIME),
+        })
+        .send({ accessToken, refreshToken });
     } catch (err) {
       res.status(400).json({ err: (err as Error).message });
     }

@@ -1,6 +1,6 @@
 import { type IMeetup } from '../schemes/meetup/interfaces';
 
-type UserInfo = {
+export type UserInfo = {
   accessToken: string;
   refreshToken: string;
   username: string;

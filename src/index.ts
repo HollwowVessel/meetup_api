@@ -5,6 +5,7 @@ import swaggerUi from 'swagger-ui-express';
 import passport from 'passport';
 import YAML from 'yamljs';
 import { join } from 'path';
+import cookieParser from 'cookie-parser';
 
 import { Strategy as JWTStrategy } from 'passport-jwt';
 import { checkAuth } from './middlewares/checkAuth';
@@ -21,6 +22,7 @@ const port = Number(PORT) || 4000;
 passport.use(new JWTStrategy(passportOption, checkAuth));
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(
   '/meetup',

@@ -6,6 +6,7 @@ export const checkAuth = async (
 ) => {
   try {
     const user = await db.oneOrNone(userQueries.getById, [jwtPayload.id]);
+
     if (user) {
       return done(null, user);
     }

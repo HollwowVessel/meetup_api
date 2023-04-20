@@ -5,10 +5,19 @@ import { sendMessage } from '../utils/sendMessage';
 import { createSearchQuery } from '../utils/createSearchQuery';
 import { type IQuery } from '../schemes/meetup/interfaces';
 import { type Result } from '../types';
+import { verify } from 'jsonwebtoken';
+import { REFRESH_TOKEN_SECRET } from '../constants';
+import { type IJWTInfo } from '../schemes/user/interfaces';
 
 class MeetupController {
   async getMeetups(req: Request, res: Response) {
     try {
+      const { accessToken } = req.cookies;
+      if (!accessToken) {
+        res.json(401).json({ err: 'Unauthorized' });
+        return;
+      }
+
       await queryObjectSchema.validateAsync(req.query);
 
       let data: Result;
@@ -75,10 +84,14 @@ class MeetupController {
     try {
       await meetupSchema.validateAsync(req.body);
 
+      const { refreshToken } = req.cookies;
+
+      const { id } = verify(refreshToken, REFRESH_TOKEN_SECRET!) as IJWTInfo;
+
       const {
         body: { name, description, tags, timestamps },
       } = req;
-      const params = [name, description, tags, timestamps];
+      const params = [name, description, tags, timestamps, id];
 
       const data = await meetupService.create(params);
 
