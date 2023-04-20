@@ -7,7 +7,7 @@ import YAML from 'yamljs';
 import { join } from 'path';
 
 import { Strategy as JWTStrategy } from 'passport-jwt';
-import { checkAuth } from './utils/checkAuth';
+import { checkAuth } from './middlewares/checkAuth';
 import { passportOption } from './config';
 const app = express();
 

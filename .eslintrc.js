@@ -28,7 +28,7 @@ module.exports = {
   ],
   extends: ['xo', 'prettier'],
   parserOptions: {
-    project: 'tsconfig.json',
+    project: './tsconfig.json',
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
