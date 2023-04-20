@@ -3,5 +3,6 @@ CREATE TABLE users (
     email TEXT UNIQUE,
     username TEXT UNIQUE,
     password TEXT,
-    refresh_token TEXT
-)
+    refresh_token TEXT,
+    role TEXT
+);

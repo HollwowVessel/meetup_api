@@ -64,13 +64,13 @@ class MeetupController {
       await meetupSchema.validateAsync(req.body);
 
       const {
-        body: { name, description, tags, timestamps },
+        body: { name, description, tags, timestamps, participants },
       } = req;
       const {
         params: { id },
       } = req;
 
-      const params = [name, description, tags, timestamps, id];
+      const params = [name, description, tags, timestamps, participants, id];
 
       const data = await meetupService.update(params);
 
@@ -89,9 +89,9 @@ class MeetupController {
       const { id } = verify(refreshToken, REFRESH_TOKEN_SECRET!) as IJWTInfo;
 
       const {
-        body: { name, description, tags, timestamps },
+        body: { name, description, tags, timestamps, participants },
       } = req;
-      const params = [name, description, tags, timestamps, id];
+      const params = [name, description, tags, timestamps, participants, id];
 
       const data = await meetupService.create(params);
 

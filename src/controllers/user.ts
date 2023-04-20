@@ -15,11 +15,15 @@ import { type UserInfo } from '../types';
 export class UserController {
   async registration(req: Request, res: Response) {
     try {
-      const { email, username, password } = await userSchema.validateAsync(
-        req.body
-      );
+      const { email, username, password, role } =
+        await userSchema.validateAsync(req.body);
 
-      const data = await userService.registration(username, email, password);
+      const data = await userService.registration(
+        username,
+        email,
+        password,
+        role
+      );
 
       sendMessage(data, res);
     } catch (err) {
@@ -50,8 +54,6 @@ export class UserController {
   async refreshToken(req: Request, res: Response) {
     try {
       const { refreshToken } = req.cookies;
-
-      console.log(refreshToken);
 
       const { id, email, username } = verify(
         refreshToken,

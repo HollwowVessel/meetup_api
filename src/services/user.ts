@@ -13,7 +13,8 @@ class UserService {
   async registration(
     username: string,
     email: string,
-    password: string
+    password: string,
+    role = 'user'
   ): Promise<Result> {
     try {
       const hashPassword = await bcrypt.hash(password, 10);
@@ -22,6 +23,7 @@ class UserService {
         username,
         email,
         hashPassword,
+        role,
       ]);
 
       return {
