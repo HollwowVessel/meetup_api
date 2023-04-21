@@ -1,8 +1,13 @@
-FROM node:lts
+FROM node:alpine
 
 WORKDIR /app
-COPY ["package.json", "yarn.lock", "tsconfig.json", ".env", "./"]
-COPY ./src ./src
+
+EXPOSE 3000
+
+COPY package.json . 
+
 RUN yarn install
 
-CMD [yarn, start:dev]
+COPY . .
+
+CMD ["yarn", "start:dev"]

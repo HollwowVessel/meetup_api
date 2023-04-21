@@ -6,7 +6,7 @@ export const {
   POSTGRES_USER,
   POSTGRES_PASSWORD,
   POSTGRES_PORT,
-  POSTGRES_NAME,
+  POSTGRES_DB,
 } = process.env;
 
 export const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;

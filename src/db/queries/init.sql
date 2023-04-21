@@ -6,7 +6,6 @@ CREATE TABLE users (
     refresh_token TEXT,
     role TEXT
 );
-
 CREATE TABLE meetups (
     id SERIAL PRIMARY KEY,
     name TEXT,
