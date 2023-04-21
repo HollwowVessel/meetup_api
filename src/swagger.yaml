@@ -32,6 +32,35 @@ definitions:
     required:
       - name
       - timestamp
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+      email:
+        type: string
+      username:
+        type: string
+      role:
+        type: string
+  UserInfo:
+    type: object
+    properties:
+      id:
+        type: integer
+      accessToken:
+        type: string
+      refreshToken:
+        type: string
+  Error:
+    type: object
+    properties:
+      err:
+        type: boolean
+      result:
+        type: string
+      status:
+        type: integer
 
 paths:
   /meetups:
@@ -75,8 +104,22 @@ paths:
               $ref: '#/definitions/Meetup'
         '400':
           description: Invalid query parameters
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
         '404':
           description: No meetups found
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+        '500':
+          description: Internal server error
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
 
     post:
       summary: Create a new meetup
@@ -97,8 +140,16 @@ paths:
             $ref: '#/definitions/Meetup'
         '400':
           description: Invalid request body
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
         '500':
           description: Server error
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
 
   /meetups/{id}:
     get:
@@ -120,6 +171,16 @@ paths:
             $ref: '#/definitions/Meetup'
         '404':
           description: Meetup not found
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+        '500':
+          description: Internal server error
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
 
     patch:
       description: Update a single meetup by
@@ -145,8 +206,23 @@ paths:
             $ref: '#/definitions/Meetup'
         '400':
           description: Invalid request body
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
         '404':
           description: Meetup not found
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+        '500':
+          description: Internal server error
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+
     delete:
       summary: Delete a meetup by ID
       tags: [Meetups]
@@ -164,13 +240,119 @@ paths:
             $ref: '#/definitions/Meetup'
         '404':
           description: Meetup not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/definitions/Meetup'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
         '500':
           description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/definitions/Meetup'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+
+  /api/registration:
+    post:
+      summary: User registration endpoint
+      tags: [UserLogin]
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              username:
+                type: string
+              password:
+                type: string
+              role:
+                type: string
+          required:
+            - email
+            - username
+            - password
+            - role
+      responses:
+        '200':
+          description: User registration successful
+        '400':
+          description: Invalid request body
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+        '500':
+          description: Internal server error
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+
+  /api/login:
+    post:
+      summary: User login endpoint
+      tags: [UserLogin]
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+          required:
+            - email
+            - password
+      responses:
+        '200':
+          description: User login successful
+          schema:
+            $ref: '#/definitions/UserInfo'
+        '400':
+          description: Invalid request body
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+        '401':
+          description: Invalid credentials
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+        '500':
+          description: Internal server error
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+
+  /api/refresh:
+    post:
+      summary: User token refresh endpoint
+      tags: [UserLogin]
+      responses:
+        '200':
+          description: Token refresh successful
+          schema:
+            $ref: '#/definitions/UserInfo'
+        '401':
+          description: Unauthorized
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+        '500':
+          description: Internal server error
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
