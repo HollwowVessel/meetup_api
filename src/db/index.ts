@@ -12,10 +12,18 @@ const connectionString = `postgresql://${USER!}:${PASSWORD!}@localhost:${PORT!}/
 
 export const db = pgp(connectionString);
 
-export const queries = {
-  getAll: createQuery(__dirname, 'queries/getAll.sql'),
-  getOne: createQuery(__dirname, 'queries/getById.sql'),
-  delete: createQuery(__dirname, 'queries/delete.sql'),
-  update: createQuery(__dirname, 'queries/update.sql'),
-  create: createQuery(__dirname, 'queries/create.sql'),
+export const meetupQueries = {
+  getAll: createQuery(__dirname, 'queries/meetup/getAll.sql'),
+  getOne: createQuery(__dirname, 'queries/meetup/getById.sql'),
+  delete: createQuery(__dirname, 'queries/meetup/delete.sql'),
+  update: createQuery(__dirname, 'queries/meetup/update.sql'),
+  create: createQuery(__dirname, 'queries/meetup/create.sql'),
+};
+
+export const userQueries = {
+  getAll: createQuery(__dirname, 'queries/user/getAll.sql'),
+  getById: createQuery(__dirname, 'queries/user/getById.sql'),
+  getByEmail: createQuery(__dirname, 'queries/user/getByEmail.sql'),
+  create: createQuery(__dirname, 'queries/user/create.sql'),
+  updateToken: createQuery(__dirname, 'queries/user/updateToken.sql'),
 };

@@ -1,68 +1,87 @@
-import { type NextFunction, type Request, type Response } from 'express';
-import { db, queries } from '../db';
+import { type Request, type Response } from 'express';
+import { meetupService } from '../services/meetup';
+import { sendMessage } from '../utils/sendMessage';
+import { createSearchQuery } from '../utils/createSearchQuery';
+import { type IQuery } from '../schemes/meetup/interfaces';
+import { type Result } from '../types';
+import { verify } from 'jsonwebtoken';
+import { REFRESH_TOKEN_SECRET } from '../constants';
+import { type IJWTInfo } from '../schemes/user/interfaces';
 
 class MeetupController {
-  async getMeetups(req: Request, res: Response, next: NextFunction) {
-    try {
-      const meetups = await db.many(queries.getAll);
+  async getMeetups(req: Request, res: Response) {
+    let data: Result;
 
-      res.status(200).json(meetups);
-    } catch (err) {
-      next(err);
+    if (Object.keys(req.query).length === 0) {
+      data = await meetupService.getAll();
+    } else {
+      const query = createSearchQuery(req.query as unknown as IQuery);
+      data = await meetupService.getAllWithCustomQuery(query);
     }
+
+    const {
+      query: { page, offset },
+    } = req;
+
+    sendMessage(data, res, page as string, offset as string);
   }
 
-  async getOneMeetup(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { id } = req.params;
+  async getOneMeetup(req: Request, res: Response) {
+    const {
+      params: { id },
+    } = req;
 
-      const meetup = await db.one(queries.getOne, [id]);
+    const data = await meetupService.getOne(id);
 
-      res.status(200).json(meetup);
-    } catch (err) {
-      next(err);
-    }
+    sendMessage(data, res);
   }
 
-  async deleteMeetup(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { id } = req.params;
+  async deleteMeetup(req: Request, res: Response) {
+    const {
+      params: { id },
+    } = req;
 
-      const meetup = await db.one(queries.delete, [id]);
+    const data = await meetupService.delete(id);
 
-      res.status(200).json({ ...meetup, success: true });
-    } catch (err) {
-      next(err);
-    }
+    sendMessage(data, res);
   }
 
-  async updateMeetup(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { name, description, tags, timestamps } = req.body;
-      const { id } = req.params;
+  async updateMeetup(req: Request, res: Response) {
+    const {
+      body: { name, description, tags, timestamps, participants },
+    } = req;
+    const {
+      params: { id },
+    } = req;
 
-      const params = [name, description, tags, timestamps, id];
+    const params = { name, description, tags, timestamps, participants, id };
 
-      const meetup = await db.one(queries.update, params);
+    const data = await meetupService.update(params);
 
-      res.status(200).json(meetup);
-    } catch (err) {
-      next(err);
-    }
+    sendMessage(data, res);
   }
 
-  async createMeetup(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { name, description, tags, timestamps } = req.body;
+  async createMeetup(req: Request, res: Response) {
+    const { refreshToken } = req.cookies;
 
-      const params = [name, description, tags, timestamps];
+    const { id } = verify(refreshToken, REFRESH_TOKEN_SECRET!) as IJWTInfo;
 
-      const newMeetup = await db.one(queries.create, params);
+    const {
+      body: { name, description, tags, timestamps, participants },
+    } = req;
 
-      res.status(201).json(newMeetup);
-    } catch (err) {
-      next(err);
-    }
+    const params = {
+      name,
+      description,
+      tags,
+      timestamps,
+      participants,
+      creator_id: id,
+    };
+
+    const data = await meetupService.create(params);
+
+    sendMessage(data, res);
   }
 }
 

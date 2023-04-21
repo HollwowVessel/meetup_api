@@ -1,1 +1,2 @@
 SELECT * FROM meetups
+ORDER BY id ASC
