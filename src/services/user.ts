@@ -1,30 +1,26 @@
-import { sign } from 'jsonwebtoken';
-import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from '../constants';
 import { INTERNAL_SERVER_ERROR, NOT_FOUND } from '../constants/httpMessages';
-import {
-  ACCESS_TOKEN_LIFETIME,
-  REFRESH_TOKEN_LIFETIME,
-} from '../constants/jwtInfo';
 import { db, userQueries } from '../db';
 import { type Result } from '../types';
 import bcrypt from 'bcrypt';
+import { type RegistrationProps, type LoginProps } from './types';
+import { createTokens } from '../utils/createTokens';
 
 class UserService {
-  async registration(
-    username: string,
-    email: string,
-    password: string,
-    role = 'user'
-  ): Promise<Result> {
+  async registration({
+    email,
+    password,
+    role = 'user',
+    username,
+  }: RegistrationProps): Promise<Result> {
     try {
-      const hashPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-      const user = await db.one(userQueries.create, [
+      const user = await db.one(userQueries.create, {
         username,
         email,
-        hashPassword,
+        password: hashedPassword,
         role,
-      ]);
+      });
 
       return {
         result: user,
@@ -35,11 +31,16 @@ class UserService {
     }
   }
 
-  async login(email: string, password: string): Promise<Result> {
+  async login({ email, password }: LoginProps): Promise<Result> {
     try {
-      const user = await db.oneOrNone(userQueries.getByEmail, email);
+      const {
+        password: userPassword,
+        id,
+        username,
+        role,
+      } = await db.oneOrNone(userQueries.getByEmail, email);
 
-      const check = await bcrypt.compare(password, user.password);
+      const check = await bcrypt.compare(password, userPassword);
 
       if (!check) {
         return {
@@ -49,32 +50,25 @@ class UserService {
         };
       }
 
-      const { id, username, role } = user;
-
-      const userData = { id, email, username, role };
-
-      const accessToken = sign(userData, ACCESS_TOKEN_SECRET!, {
-        expiresIn: ACCESS_TOKEN_LIFETIME,
-      });
-
-      const refreshToken = sign(userData, REFRESH_TOKEN_SECRET!, {
-        expiresIn: REFRESH_TOKEN_LIFETIME,
+      const { refreshToken, accessToken } = createTokens({
+        id,
+        email,
+        username,
+        role,
       });
 
       await db.any(userQueries.updateToken, [refreshToken, id]);
 
-      const data = {
-        accessToken,
-        refreshToken,
-        username,
-        role,
-        id,
-        email,
-      };
-
       return {
         status: 200,
-        result: data,
+        result: {
+          accessToken,
+          refreshToken,
+          username,
+          role,
+          id,
+          email,
+        },
       };
     } catch (err) {
       return {

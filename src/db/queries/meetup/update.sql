@@ -1,4 +1,4 @@
 UPDATE meetups
-SET name = $1, description = $2, tags = $3, timestamps = $4, participants = $5
-WHERE id = $6
+SET name = ${name}, description = ${description}, tags = ${tags}, timestamps = ${timestamps}, participants = ${participants}
+WHERE id = ${id}
 RETURNING *

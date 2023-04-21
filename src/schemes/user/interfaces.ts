@@ -13,5 +13,5 @@ export interface IJWTInfo {
   email: string;
   username: string;
   id: string;
-  role: string;
+  role: 'user' | 'creator';
 }

@@ -2,6 +2,7 @@ import { type Request } from 'express';
 import { INTERNAL_SERVER_ERROR, NOT_FOUND } from '../constants/httpMessages';
 import { db, meetupQueries } from '../db';
 import { type Result } from '../types';
+import { type UpdateProps, type CreateProps } from './types';
 
 class MeetupService {
   async getOne(id: string): Promise<Result> {
@@ -34,7 +35,7 @@ class MeetupService {
     }
   }
 
-  async update(params: string[]): Promise<Result> {
+  async update(params: UpdateProps): Promise<Result> {
     try {
       const result = await db.one(meetupQueries.update, params);
 
@@ -44,7 +45,7 @@ class MeetupService {
     }
   }
 
-  async create(params: string[]) {
+  async create(params: CreateProps) {
     try {
       const result = await db.one(meetupQueries.create, params);
 

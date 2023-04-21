@@ -11,5 +11,5 @@ export const getMaxAge = (time: string) => {
     result = Number(time) * 24 * 3600;
   }
 
-  return result * 1000;
+  return result;
 };

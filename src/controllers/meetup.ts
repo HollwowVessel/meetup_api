@@ -1,5 +1,4 @@
 import { type Request, type Response } from 'express';
-import { meetupSchema, queryObjectSchema } from '../schemes/meetup';
 import { meetupService } from '../services/meetup';
 import { sendMessage } from '../utils/sendMessage';
 import { createSearchQuery } from '../utils/createSearchQuery';
@@ -11,32 +10,20 @@ import { type IJWTInfo } from '../schemes/user/interfaces';
 
 class MeetupController {
   async getMeetups(req: Request, res: Response) {
-    try {
-      const { accessToken } = req.cookies;
-      if (!accessToken) {
-        res.json(401).json({ err: 'Unauthorized' });
-        return;
-      }
+    let data: Result;
 
-      await queryObjectSchema.validateAsync(req.query);
-
-      let data: Result;
-
-      if (Object.keys(req.query).length === 0) {
-        data = await meetupService.getAll();
-      } else {
-        const query = createSearchQuery(req.query as unknown as IQuery);
-        data = await meetupService.getAllWithCustomQuery(query);
-      }
-
-      const {
-        query: { page, offset },
-      } = req;
-
-      sendMessage(data, res, page as string, offset as string);
-    } catch (err) {
-      res.status(400).json({ err: (err as Error).message });
+    if (Object.keys(req.query).length === 0) {
+      data = await meetupService.getAll();
+    } else {
+      const query = createSearchQuery(req.query as unknown as IQuery);
+      data = await meetupService.getAllWithCustomQuery(query);
     }
+
+    const {
+      query: { page, offset },
+    } = req;
+
+    sendMessage(data, res, page as string, offset as string);
   }
 
   async getOneMeetup(req: Request, res: Response) {
@@ -60,45 +47,41 @@ class MeetupController {
   }
 
   async updateMeetup(req: Request, res: Response) {
-    try {
-      await meetupSchema.validateAsync(req.body);
+    const {
+      body: { name, description, tags, timestamps, participants },
+    } = req;
+    const {
+      params: { id },
+    } = req;
 
-      const {
-        body: { name, description, tags, timestamps, participants },
-      } = req;
-      const {
-        params: { id },
-      } = req;
+    const params = { name, description, tags, timestamps, participants, id };
 
-      const params = [name, description, tags, timestamps, participants, id];
+    const data = await meetupService.update(params);
 
-      const data = await meetupService.update(params);
-
-      sendMessage(data, res);
-    } catch (err) {
-      res.status(400).json({ error: (err as Error).message });
-    }
+    sendMessage(data, res);
   }
 
   async createMeetup(req: Request, res: Response) {
-    try {
-      await meetupSchema.validateAsync(req.body);
+    const { refreshToken } = req.cookies;
 
-      const { refreshToken } = req.cookies;
+    const { id } = verify(refreshToken, REFRESH_TOKEN_SECRET!) as IJWTInfo;
 
-      const { id } = verify(refreshToken, REFRESH_TOKEN_SECRET!) as IJWTInfo;
+    const {
+      body: { name, description, tags, timestamps, participants },
+    } = req;
 
-      const {
-        body: { name, description, tags, timestamps, participants },
-      } = req;
-      const params = [name, description, tags, timestamps, participants, id];
+    const params = {
+      name,
+      description,
+      tags,
+      timestamps,
+      participants,
+      creator_id: id,
+    };
 
-      const data = await meetupService.create(params);
+    const data = await meetupService.create(params);
 
-      sendMessage(data, res);
-    } catch (err) {
-      res.status(400).json({ error: (err as Error).message });
-    }
+    sendMessage(data, res);
   }
 }
 

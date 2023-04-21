@@ -1,5 +1,5 @@
 import express from 'express';
-import { PORT } from './constants';
+import { PORT, SIGTERM } from './constants';
 import { meetupRouter, userRouter } from './routes';
 import swaggerUi from 'swagger-ui-express';
 import passport from 'passport';
