@@ -8,7 +8,7 @@ import {
 } from '../constants';
 const pgp = pgPromise();
 
-const connectionString = `postgresql://${USER!}:${PASSWORD!}@localhost:${PORT!}/${NAME!}`;
+const connectionString = `postgres://${USER!}:${PASSWORD!}@postgres:${PORT!}`;
 
 export const db = pgp(connectionString);
 

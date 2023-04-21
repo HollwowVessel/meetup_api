@@ -27,7 +27,7 @@ class UserService {
         status: 201,
       };
     } catch (err) {
-      return { status: 500, err: true, result: INTERNAL_SERVER_ERROR };
+      return { status: 500, err: true, result: (err as Error).message };
     }
   }
 
