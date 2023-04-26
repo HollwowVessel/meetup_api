@@ -1,9 +1,10 @@
 import { type NextFunction, type Request, type Response } from 'express';
 import { verify } from 'jsonwebtoken';
+
 import { ACCESS_TOKEN_SECRET } from '../constants';
-import { type IJWTInfo } from '../schemes/user/interfaces';
-import { db, meetupQueries } from '../db';
 import { FORBIDDEN, NOT_FOUND } from '../constants/httpMessages';
+import { db, meetupQueries } from '../db';
+import { type IJWTInfo } from '../schemes/user/interfaces';
 
 export const checkPermission =
   (roles: 'creator') =>

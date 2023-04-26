@@ -27,6 +27,7 @@ module.exports = {
     },
   ],
   extends: ['xo', 'prettier'],
+  plugins: ['simple-import-sort'],
   parserOptions: {
     project: './tsconfig.json',
     tsconfigRootDir: __dirname,
@@ -35,5 +36,7 @@ module.exports = {
   rules: {
     '@typescript-eslint/indent': 0,
     'no-constant-binary-expression': 0,
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
   },
 };

@@ -1,9 +1,10 @@
+import bcrypt from 'bcrypt';
+
 import { INTERNAL_SERVER_ERROR, NOT_FOUND } from '../constants/httpMessages';
 import { db, userQueries } from '../db';
 import { type Result } from '../types';
-import bcrypt from 'bcrypt';
-import { type RegistrationProps, type LoginProps } from './types';
 import { createTokens } from '../utils/createTokens';
+import { type LoginProps, type RegistrationProps } from './types';
 
 class UserService {
   async registration({

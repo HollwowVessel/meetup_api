@@ -1,12 +1,13 @@
 import { type Request, type Response } from 'express';
-import { meetupService } from '../services/meetup';
-import { sendMessage } from '../utils/sendMessage';
-import { createSearchQuery } from '../utils/createSearchQuery';
-import { type IQuery } from '../schemes/meetup/interfaces';
-import { type Result } from '../types';
 import { verify } from 'jsonwebtoken';
+
 import { REFRESH_TOKEN_SECRET } from '../constants';
+import { type IQuery } from '../schemes/meetup/interfaces';
 import { type IJWTInfo } from '../schemes/user/interfaces';
+import { meetupService } from '../services/meetup';
+import { type Result } from '../types';
+import { createSearchQuery } from '../utils/createSearchQuery';
+import { sendMessage } from '../utils/sendMessage';
 
 class MeetupController {
   async getMeetups(req: Request, res: Response) {

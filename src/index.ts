@@ -1,15 +1,15 @@
-import express from 'express';
-import { PORT, SIGTERM } from './constants';
-import { meetupRouter, userRouter } from './routes';
-import swaggerUi from 'swagger-ui-express';
-import passport from 'passport';
-import YAML from 'yamljs';
-import { join } from 'path';
 import cookieParser from 'cookie-parser';
-
+import express from 'express';
+import passport from 'passport';
 import { Strategy as JWTStrategy } from 'passport-jwt';
-import { checkAuth } from './middlewares/checkAuth';
+import { join } from 'path';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+
 import { passportOption } from './config';
+import { PORT, SIGTERM } from './constants';
+import { checkAuth } from './middlewares/checkAuth';
+import { meetupRouter, userRouter } from './routes';
 const app = express();
 
 const swaggerDocument = YAML.load(join(__dirname, 'swagger.yaml'));
