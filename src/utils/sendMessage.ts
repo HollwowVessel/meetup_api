@@ -1,4 +1,5 @@
 import { type Response } from 'express';
+
 import { type Result } from '../types/index';
 
 export const sendMessage = (

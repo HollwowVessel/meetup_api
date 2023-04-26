@@ -1,7 +1,8 @@
 import { Router } from 'express';
+
 import { meetupController } from '../controllers/meetup';
-import { checkPermission } from '../middlewares/checkPermission';
 import { checkDtoFit } from '../middlewares/checkDtoFit';
+import { checkPermission } from '../middlewares/checkPermission';
 import { meetupSchema } from '../schemes/meetup';
 import { queryObjectSchema } from '../schemes/query';
 

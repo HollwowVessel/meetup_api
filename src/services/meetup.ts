@@ -1,8 +1,9 @@
 import { type Request } from 'express';
+
 import { INTERNAL_SERVER_ERROR, NOT_FOUND } from '../constants/httpMessages';
 import { db, meetupQueries } from '../db';
 import { type Result } from '../types';
-import { type UpdateProps, type CreateProps } from './types';
+import { type CreateProps, type UpdateProps } from './types';
 
 class MeetupService {
   async getOne(id: string): Promise<Result> {

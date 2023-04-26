@@ -1,17 +1,17 @@
 import { type Request, type Response } from 'express';
-import { loginSchema, userSchema } from '../schemes/user';
-import { sign, verify } from 'jsonwebtoken';
-import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from '../constants';
+import { verify } from 'jsonwebtoken';
+
+import { REFRESH_TOKEN_SECRET } from '../constants';
 import {
   ACCESS_TOKEN_LIFETIME,
   REFRESH_TOKEN_LIFETIME,
 } from '../constants/jwtInfo';
 import { type IJWTInfo } from '../schemes/user/interfaces';
 import { userService } from '../services/user';
-import { sendMessage } from '../utils/sendMessage';
-import { getMaxAge } from '../utils/getMaxAge';
 import { type UserInfo } from '../types';
 import { createTokens } from '../utils/createTokens';
+import { getMaxAge } from '../utils/getMaxAge';
+import { sendMessage } from '../utils/sendMessage';
 
 export class UserController {
   async registration(req: Request, res: Response) {

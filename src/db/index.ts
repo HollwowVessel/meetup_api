@@ -1,14 +1,15 @@
 import pgPromise from 'pg-promise';
-import { createQuery } from '../utils/createQuery';
+
 import {
-  POSTGRES_NAME as NAME,
+  POSTGRES_DB as DB,
   POSTGRES_PASSWORD as PASSWORD,
   POSTGRES_PORT as PORT,
   POSTGRES_USER as USER,
 } from '../constants';
+import { createQuery } from '../utils/createQuery';
 const pgp = pgPromise();
 
-const connectionString = `postgresql://${USER!}:${PASSWORD!}@localhost:${PORT!}/${NAME!}`;
+const connectionString = `postgres://${USER!}:${PASSWORD!}@postgres:${PORT!}/${DB}`;
 
 export const db = pgp(connectionString);
 
